@@ -1,0 +1,36 @@
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx1
+  namespace: default
+spec:
+  selector: run == 'my-nginx1'
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: run == 'my-nginx2' 
+  egress:
+  - action: Allow
+    protocol: TCP
+    source:
+      namespaceSelector: namespacename == 'default'
+---
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx2
+  namespace: default
+spec:
+  selector: run == 'my-nginx2'
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: run == 'my-nginx1' 
+  egress:
+  - action: Allow
+    protocol: TCP
+    source:
+      namespaceSelector: namespacename == 'default'
+
